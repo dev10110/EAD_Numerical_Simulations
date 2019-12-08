@@ -1,0 +1,237 @@
+function [eta_1d, eta_alt, eta, Ee, Ie, Ic, Jd, Je, Jc, res_norm, grad_phi, phi_last] = ...
+    EHDsolverf(p,e,t,r_e,r_c,d,kV,u_interp,v_interp,U,meshdomain,rho0,max_iter,first_it,phi,Sext,pbdry)
+
+%% declare global variables
+
+global do_flow plot_debug no_flux
+
+%% set other parameters
+mu = 2*10^-4;
+epsi = 8.85418782e-12;
+ng = 50;
+
+%% initialize solution (i.e. Laplace): Davis and Hoburg, Step 1
+
+% get boundary conditions through custom function
+b = @pdebound_1d;
+a = 0;
+c = 1;
+
+if first_it
+    f = 0;
+    % solve for potential field
+    if no_flux
+        [phi, ~] = pdenonlin(b,p,e,t,c,a,f);
+    else
+        [K,M,F,Q,G,H,R]=assempde(b,p,e,t,c,a,f);
+        K(pbdry,pbdry) = K(pbdry,pbdry)+Sext(1:length(pbdry),1:length(pbdry));
+        phi = assempde(K,M,F,Q,G,H,R);
+    end
+    
+end
+
+% find electric field
+[Ex, Ey] = pdegrad(p,t,phi);
+grad_phi = [Ex; Ey];
+
+% find all starting points from emitter
+num_emit = 7;
+[xe,ye] = getMOCStart( num_emit, d, r_e);
+[pts_e, pts_c, e_inds, c_inds] = getBPts(p,e,t,d,r_e,r_c);
+[xc,yc,dAc,thetac,c_inds] = getMOCEnd( num_emit,r_c,pts_c,c_inds);
+[xe_alt,ye_alt,dAe,theta,e_inds] = getMOCStart_alt( num_emit, d, r_e,pts_e,e_inds); % for current calculation
+
+% get area of each FEM element
+dAFEM = getdAFEM( p,t );
+
+% initialize potential field storage variables
+phi_last = phi;
+
+%% begin iteration
+
+% initialize iteration variables
+i = 1;
+exit_test = 1;
+ind_f
+
+while exit_test > 0.001
+        
+    % show iteration number
+    i
+    
+    %% determine space charge distribution using MOC: Davis and Hoburg, Step 3
+
+    % find interpolation surface for electric field
+    [ uxinterp,uyinterp ] = getEInterp( p,t,grad_phi,r_c );
+   
+    % determine characteristic lines per starting point and return space
+    % charge along lines    
+    %[rho_store, rhoc_store] = ...
+    [rho_store, rhoc_store] = ...
+        getRho2(xe, ye, d, r_e, r_c, mu, ...
+        epsi, rho0, meshdomain, ind_fig,u_interp,v_interp,U,uxinterp,uyinterp);
+    
+    % calculate information required for getRhoGrid
+    x_max = max(abs(rho_store(1,:)));
+    ni = 6; % keep even to avoid infinite field lines
+    [xi,yi] = findInterps(ni,d,meshdomain,x_max);
+    
+    rho2_store = ...
+        getRhoGrid(xi, yi,d, r_e, r_c, mu, epsi, rho0, ...
+        meshdomain, ind_fig,u_interp,v_interp,U,uxinterp,uyinterp);
+    
+    % work back from collector
+    if do_flow
+        rho3_store = ...
+            getRhoC(grad_phi, d, r_e, r_c, p, t, mu, epsi, rho0, ...
+            meshdomain, ind_fig,u_interp,v_interp,U,rhoc_store,uxinterp,uyinterp);
+    else
+        rho3_store = [];
+    end    
+    ind_fig = ind_fig + 1;
+    
+    % put together space charge interpolation vector
+    rho_store = [rho_store,rho2_store,rho3_store]; 
+    
+    % interpolate and fill FEM domain with space charge
+    [f_new,finterp] = interpf( p,t,rho_store,epsi,meshdomain,ind_fig );
+    ind_fig = ind_fig + 1;
+           
+    %% find electric field at emitter and collector
+    
+    % emitter
+    %[ Exe,Eye ] = getE( xe_alt, ye_alt, temp, p, t, uxinterp,uyinterp );
+    [ Exe,Eye ] = getE_alt( e_inds, grad_phi );
+    
+    % compute outer loop exit metric
+    Ee(i) = sum(sqrt(Exe.^2 + Eye.^2).*dAe)/sum(dAe); % 'average' electric field
+    
+    % collector
+    %[ Exc,Eyc ] = getE( xc, yc, temp, p, t, uxinterp,uyinterp );
+    [ Exc,Eyc ] = getE_alt( c_inds, grad_phi );
+    Ec = sqrt(Exc.^2 + Eyc.^2);
+    
+    % emitter, space charge
+    rhoe = rho0; % assumed constant at emitter (may change this later)
+    
+    % collector, space charge
+    rhoc  = getRhoEnd( xc,yc,rho_store,finterp );
+    
+    % determine currents at emitter and collector
+    Ie(i) = sum((Exe.^2 + Eye.^2).^(0.5)*mu.*rhoe.*dAe);
+    %Ie(i) = rhoe*Ee(i)*mu*2*pi()*r_e;
+    Ic(i) = sum((Exc.^2 + Eyc.^2).^(0.5)*mu.*rhoc.*dAc);
+    
+    %% alternate method to determine charge conservation
+    
+    [Jin, Jout, Jnet, Jdiff] = findJConv(p,t,d,finterp,u_interp,v_interp,grad_phi,mu,100,[0,d/2],d/2);    
+    Jd(i) = Jdiff;
+    
+    %% alternate method to determine emitter and collector currents
+    
+    [~, Jout, ~, ~] = findJConv(p,t,d,finterp,u_interp,v_interp,grad_phi,mu,100,[0,d+r_e],r_e*5);    
+    Je(i) = Jout;
+    
+    [Jin, ~, ~, ~] = findJConv(p,t,d,finterp,u_interp,v_interp,grad_phi,mu,100,[0,-r_c],r_c*5);    
+    Jc(i) = Jin;
+    
+    %% re-solve for potential field: Davis and Hoburg, Step 4
+    
+    if no_flux
+        [phi_new, ~] = pdenonlin(b,p,e,t,c,a,f_new);
+    else
+        [K,M,F,Q,G,H,R]=assempde(b,p,e,t,c,a,f_new);
+        K(pbdry,pbdry) = K(pbdry,pbdry)+Sext(1:length(pbdry),1:length(pbdry));
+        phi_new = assempde(K,M,F,Q,G,H,R);
+    end
+        
+    %% determine exit criteria, exit if met: Davis and Hoburg, Step 5
+    
+    diff(:,i) = abs((phi_new - phi_last));
+    phi_norm = sum(phi_last.^2)^0.5;
+    exit_test = sum(diff(:,i).^2)^0.5/phi_norm;
+    res_norm(i) = exit_test*100
+    
+    % reset necessary variables
+    omega = 1/2;
+    phi_last = phi_new;
+    phi = phi_new*omega + phi*(1-omega);
+    [Ex_new, Ey_new] = pdegrad(p,t,phi);
+    grad_phi = [Ex_new; Ey_new];
+     
+    %% determine EHD thrust
+    
+    % compute thrust
+    T = sum(f_new*epsi.*Ey_new.*dAFEM);
+    TA = T/(2*pi()*r_e);
+    
+    % find T/P
+    P = kV*1e3*Je(i);
+    eta(i) = T/P*1e3;
+    eta_1d = 1e3/(mu*kV*1e3/d + U);
+    
+    % calculate more accurate version of 1D T/P
+    eta_alt = getTP(d,mu,kV,Ec,rhoc,yc,dAc);
+    
+    % increment iteration variables
+    i = i + 1;
+    
+    % set maximum number of iterations
+    if i > max_iter
+        break
+    end    
+    
+end
+
+%% check potential flow and emitter and collector
+
+if do_flow
+    
+    [ue, ve] = getPF( xe_alt, ye_alt, u_interp,v_interp );
+    [uc, vc] = getPF( xc, yc, u_interp,v_interp );
+    
+    figure(ind_fig)
+    subplot(2,2,1)
+    plot(theta/pi(),ue)
+    subplot(2,2,2)
+    plot(theta/pi(),ve)
+    subplot(2,2,3)
+    plot(thetac/pi(),uc)
+    subplot(2,2,4)
+    plot(thetac/pi(),vc)
+    ind_fig = ind_fig + 1;    
+    
+end
+
+if plot_debug
+    
+    figure(ind_fig)
+    subplot(2,2,1)
+    plot(theta/pi(),mu*Exe)
+    subplot(2,2,2)
+    plot(theta/pi(),mu*Eye)
+    subplot(2,2,3)
+    plot(thetac/pi(),mu*Exc)
+    subplot(2,2,4)
+    plot(thetac/pi(),mu*Eyc)
+    ind_fig = ind_fig + 1;
+    
+    figure(ind_fig)
+    subplot(2,1,1)
+    plot(theta/pi(),sqrt(Exe.^2 + Eye.^2))
+    subplot(2,1,2)
+    plot(thetac/pi(),sqrt(Exc.^2 + Eyc.^2))
+    ind_fig = ind_fig + 1;
+    
+end
+
+end
+
+
+
+
+
+
+
+
+

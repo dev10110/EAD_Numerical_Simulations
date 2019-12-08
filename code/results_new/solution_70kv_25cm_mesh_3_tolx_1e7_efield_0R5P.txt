@@ -1,0 +1,342 @@
+
+max_rho0_guess_values =
+
+   1.0e-04 *
+
+    0.2000    0.4000
+
+***************
+Now solving case:
+kv_e = 70, d = 0.250
+   01-Sep-2019 10:03:04
+
+
+
+ rho0: 2e-05, Ee: 3.34e+07, exit: 64.0 perc
+ rho0: 2e-05, Ee: 2.28e+07, exit: 7.7 perc
+ rho0: 2e-05, Ee: 1.63e+07, exit: 1.6 perc
+ rho0: 2e-05, Ee: 1.32e+07, exit: 1.8 perc
+ rho0: 2e-05, Ee: 1.21e+07, exit: 1.1 perc, 80, 160
+ rho0: 2e-05, Ee: 1.18e+07, exit: 0.7 perc
+ rho0: 2e-05, Ee: 1.18e+07, exit: 0.2 percdiff
+   3.1776e+06
+
+
+
+ rho0: 4e-05, Ee: 3.34e+07, exit: 79.8 perc
+ rho0: 4e-05, Ee: 1.96e+07, exit: 9.8 perc
+ rho0: 4e-05, Ee: 1.11e+07, exit: 2.8 perc
+ rho0: 4e-05, Ee: 7.72e+06, exit: 3.8 perc, 80, 160
+ rho0: 4e-05, Ee: 7.18e+06, exit: 2.2 perc
+ rho0: 4e-05, Ee: 7.45e+06, exit: 0.5 percdiff
+  -1.2192e+06
+
+
+ Func-count    x          f(x)             Procedure
+    2           4e-05  -1.21923e+06        initial
+
+ rho0: 3.45e-05, Ee: 3.34e+07, exit: 76.3 perc
+ rho0: 3.45e-05, Ee: 2.04e+07, exit: 9.1 perc, 80
+ rho0: 3.45e-05, Ee: 1.23e+07, exit: 2.3 perc, 80
+ rho0: 3.45e-05, Ee: 8.91e+06, exit: 3.2 perc
+ rho0: 3.45e-05, Ee: 8.17e+06, exit: 1.9 perc, 80
+ rho0: 3.45e-05, Ee: 8.29e+06, exit: 0.7 perc, 80
+ rho0: 3.45e-05, Ee: 8.46e+06, exit: 0.1 percdiff
+  -2.0421e+05
+
+
+    3      3.4454e-05       -204215        interpolation
+
+ rho0: 3.34e-05, Ee: 3.34e+07, exit: 75.6 perc
+ rho0: 3.34e-05, Ee: 2.05e+07, exit: 9.0 perc
+ rho0: 3.34e-05, Ee: 1.25e+07, exit: 2.3 perc, 80
+ rho0: 3.34e-05, Ee: 9.14e+06, exit: 3.1 perc
+ rho0: 3.34e-05, Ee: 8.38e+06, exit: 1.8 perc, 80, 160
+ rho0: 3.34e-05, Ee: 8.46e+06, exit: 0.7 perc, 80
+ rho0: 3.34e-05, Ee: 8.62e+06, exit: 0.2 percdiff
+  -4.4577e+04
+
+
+    4     3.34055e-05      -44577.5        interpolation
+
+ rho0: 3.31e-05, Ee: 3.34e+07, exit: 75.4 perc
+ rho0: 3.31e-05, Ee: 2.06e+07, exit: 9.0 perc
+ rho0: 3.31e-05, Ee: 1.26e+07, exit: 2.2 perc, 80
+ rho0: 3.31e-05, Ee: 9.21e+06, exit: 3.2 perc
+ rho0: 3.31e-05, Ee: 8.44e+06, exit: 1.8 perc, 80, 160
+ rho0: 3.31e-05, Ee: 8.51e+06, exit: 0.7 perc, 80
+ rho0: 3.31e-05, Ee: 8.67e+06, exit: 0.2 percdiff
+   4.3513e+03
+
+
+    5     3.31193e-05       4351.32        interpolation
+
+Zero found in the interval [2e-05, 4e-05]
+
+results =
+
+  struct with fields:
+
+    num_emit: 20
+
+
+ rho0: 3.31e-05, Ee: 3.34e+07, exit: 75.2 perc
+T_old =
+
+    0.0452
+
+
+T =
+
+   -0.0192
+
+
+results =
+
+  struct with fields:
+
+    num_emit: 20
+          Ee: 3.3416e+07
+          Ec: [1×96 double]
+      Ie_old: 4.2560e-04
+          Ie: 4.1747e-04
+      Ic_old: 1.3333e-05
+          Ic: -1.3173e-05
+          Je: 0
+          Jc: 0
+       T_old: 0.0452
+           T: -0.0192
+           P: 29.2232
+        rho0: 3.3119e-05
+         eta: -0.6560
+           p: [2×65775 double]
+           e: [7×480 double]
+           t: [4×131072 double]
+         phi: [65775×1 double]
+       f_new: [1×131072 double]
+     finterp: [1×1 scatteredInterpolant]
+      Ey_new: [1×131072 double]
+       dAFEM: [1×131072 double]
+    uxinterp: [1×1 scatteredInterpolant]
+    uyinterp: [1×1 scatteredInterpolant]
+
+
+ rho0: 3.31e-05, Ee: 2.06e+07, exit: 9.0 perc
+T_old =
+
+    0.0677
+
+
+T =
+
+   -0.0500
+
+, 40, 80
+results =
+
+  struct with fields:
+
+    num_emit: 80
+          Ee: 2.0580e+07
+          Ec: [1×96 double]
+      Ie_old: 2.6212e-04
+          Ie: 2.5711e-04
+      Ic_old: 4.9980e-05
+          Ic: -4.9336e-05
+          Je: 0
+          Jc: 0
+       T_old: 0.0677
+           T: -0.0500
+           P: 17.9980
+        rho0: 3.3119e-05
+         eta: -2.7758
+           p: [2×65775 double]
+           e: [7×480 double]
+           t: [4×131072 double]
+         phi: [65775×1 double]
+       f_new: [1×131072 double]
+     finterp: [1×1 scatteredInterpolant]
+      Ey_new: [1×131072 double]
+       dAFEM: [1×131072 double]
+    uxinterp: [1×1 scatteredInterpolant]
+    uyinterp: [1×1 scatteredInterpolant]
+
+
+ rho0: 3.31e-05, Ee: 1.26e+07, exit: 2.1 perc
+T_old =
+
+    0.0716
+
+
+T =
+
+   -0.0650
+
+, 40, 80
+results =
+
+  struct with fields:
+
+    num_emit: 80
+          Ee: 1.2641e+07
+          Ec: [1×96 double]
+      Ie_old: 1.6100e-04
+          Ie: 1.5792e-04
+      Ic_old: 7.7309e-05
+          Ic: -7.6303e-05
+          Je: 0
+          Jc: 0
+       T_old: 0.0716
+           T: -0.0650
+           P: 11.0545
+        rho0: 3.3119e-05
+         eta: -5.8804
+           p: [2×65775 double]
+           e: [7×480 double]
+           t: [4×131072 double]
+         phi: [65775×1 double]
+       f_new: [1×131072 double]
+     finterp: [1×1 scatteredInterpolant]
+      Ey_new: [1×131072 double]
+       dAFEM: [1×131072 double]
+    uxinterp: [1×1 scatteredInterpolant]
+    uyinterp: [1×1 scatteredInterpolant]
+
+
+ rho0: 3.31e-05, Ee: 9.23e+06, exit: 3.1 perc
+T_old =
+
+    0.0684
+
+
+T =
+
+   -0.0680
+
+, 40
+results =
+
+  struct with fields:
+
+    num_emit: 40
+          Ee: 9.2321e+06
+          Ec: [1×96 double]
+      Ie_old: 1.1758e-04
+          Ie: 1.1534e-04
+      Ic_old: 8.8820e-05
+          Ic: -8.7692e-05
+          Je: 0
+          Jc: 0
+       T_old: 0.0684
+           T: -0.0680
+           P: 8.0738
+        rho0: 3.3119e-05
+         eta: -8.4191
+           p: [2×65775 double]
+           e: [7×480 double]
+           t: [4×131072 double]
+         phi: [65775×1 double]
+       f_new: [1×131072 double]
+     finterp: [1×1 scatteredInterpolant]
+      Ey_new: [1×131072 double]
+       dAFEM: [1×131072 double]
+    uxinterp: [1×1 scatteredInterpolant]
+    uyinterp: [1×1 scatteredInterpolant]
+
+
+ rho0: 3.31e-05, Ee: 8.45e+06, exit: 1.8 perc
+T_old =
+
+    0.0652
+
+
+T =
+
+   -0.0664
+
+, 40, 80
+results =
+
+  struct with fields:
+
+    num_emit: 80
+          Ee: 8.4461e+06
+          Ec: [1×96 double]
+      Ie_old: 1.0757e-04
+          Ie: 1.0552e-04
+      Ic_old: 9.2619e-05
+          Ic: -9.1482e-05
+          Je: 0
+          Jc: 0
+       T_old: 0.0652
+           T: -0.0664
+           P: 7.3864
+        rho0: 3.3119e-05
+         eta: -8.9940
+           p: [2×65775 double]
+           e: [7×480 double]
+           t: [4×131072 double]
+         phi: [65775×1 double]
+       f_new: [1×131072 double]
+     finterp: [1×1 scatteredInterpolant]
+      Ey_new: [1×131072 double]
+       dAFEM: [1×131072 double]
+    uxinterp: [1×1 scatteredInterpolant]
+    uyinterp: [1×1 scatteredInterpolant]
+
+
+ rho0: 3.31e-05, Ee: 8.52e+06, exit: 0.8 perc
+T_old =
+
+    0.0637
+
+
+T =
+
+   -0.0641
+
+, 40, 80
+results =
+
+  struct with fields:
+
+    num_emit: 80
+          Ee: 8.5165e+06
+          Ec: [1×96 double]
+      Ie_old: 1.0847e-04
+          Ie: 1.0640e-04
+      Ic_old: 9.1823e-05
+          Ic: -9.0699e-05
+          Je: 0
+          Jc: 0
+       T_old: 0.0637
+           T: -0.0641
+           P: 7.4479
+        rho0: 3.3119e-05
+         eta: -8.6075
+           p: [2×65775 double]
+           e: [7×480 double]
+           t: [4×131072 double]
+         phi: [65775×1 double]
+       f_new: [1×131072 double]
+     finterp: [1×1 scatteredInterpolant]
+      Ey_new: [1×131072 double]
+       dAFEM: [1×131072 double]
+    uxinterp: [1×1 scatteredInterpolant]
+    uyinterp: [1×1 scatteredInterpolant]
+
+
+ rho0: 3.31e-05, Ee: 8.68e+06, exit: 0.1 perc
+T_old =
+
+    0.0644
+
+
+T =
+
+   -0.0645
+
+DONE
+   01-Sep-2019 10:42:51
+
+>> 
