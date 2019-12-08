@@ -4,7 +4,7 @@
 
 This is a repository containing the code to be able to simulate the 2D behaviour of a electroaerodynamic thruster.
 
-Since it was first implemented in a relatively old version of MATLAB, it uses a relatively poorly written MATLAB FEM solver. There is documentation on MATLAB's website, but it takes a while to find and understand.
+Since it was first implemented in a relatively old version of MATLAB, it uses a relatively poorly written MATLAB PDE solver. There is documentation on MATLAB's website, but it takes a while to find and understand.
 
 There are also a number of files which I (Dev) don't know the purpose of. Below I describe the basic architecture to help the new user to get started. The original author included a pdf called `code_desc_v1` which is extremely useful to understand the underlying theory and the implementation.
 
@@ -103,3 +103,22 @@ store everything into results structure
 return results
 
 end
+
+
+
+# PDE solvers used:
+The PDE solver used is MATLAB's built in PDESolver, `pdenonlin` (documentation)[https://uk.mathworks.com/help/pde/ug/pdenonlin.html]
+
+In the documentation it states that this is no-longer recommended, and that `solvepde` is recommended. Unfortunately, I did not have the time to refactor the code thoroughly to allow this function to be used, but might be recommended.
+
+# Future steps:
+I've done a fair bit of code reorg and commenting that did not exist originally but as such have had to use some ugly hacks and less than optimal `pdenonlin`. A proper reorg using a object-oriented method (like in Python or Julia) might be recommended to make the problem more general and
+development easier. The code also currently breaks for grounded emitters and negative potential collectors (if the box is ground), and I'm not 100% sure why. Maybe its easier to define the surrounding box and emitter at a high potential and leave the collector at ground, but the characteristics will not only start at the emitter in this case, and thus the code will have some difficulty. Allowing all surfaces to generate characteristic lines might help with this problem, and may significantly speed up the code.
+
+The code also bakes in some assumptions about symmetry that I did not have the time to fully remove.
+
+The code also spends a lot of time trying to find the right rho0 for a target e crit and potential across the electrodes. It might be easier to define a new driver script that just sweeps through the rho0 for a given geometry, and figures out the potential across the electrodes to meet the peek's e field requirement. And then the solution can (if needed) be interpolated at the require potential differences. This way one sweep through rho0s should give most of the solutions needed, and will be significant speed up to the solution.
+
+Also a better way to log the solutions might be warranted.
+
+Enjoy. Feel free to contact me at devansh [dot] agrawal [at] icloud.com for questions.  
