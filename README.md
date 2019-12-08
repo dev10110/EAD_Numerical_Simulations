@@ -30,7 +30,7 @@ I heavily modified the interface for the original code, wrapping a lot of it int
 
   Allows user to define a set of problems to be solved, including the initial guesses. The try-except system allows MATLAB to carry on even if one of the solves fails for some reason (usually bad guess on initial rho0)
 
-## Code flow:
+## Code flow for `driver_script.m`
 
 `driver script.m` - define a problem or a set of problems
 
@@ -49,3 +49,57 @@ For each problem:
 -- Except:
 
 -- -- note the error, continue
+
+## Code flow for `get_results_using_rho0()`
+
+*Args:*
+
+  rho0: space charge density at emitter
+
+  p, e, t: mesh
+
+  geometry: struct defining the problem geometry
+
+  constants: struct defining constants
+
+  plot_dedug: boolean, if true plots are shown, if disabled, plots are hidden.
+
+*Returns:*
+
+  results: struct containing the solution:
+
+*Code Flow:*
+
+define some useful constants
+
+solve for potential field with 0 space charge
+
+while not converged:
+
+-- find e field at each x, y
+
+-- create the starting location of the characteristic lines
+
+-- propagate the lines to the boundaries
+
+-- while the characteristics don't touch all the boundaries:
+
+-- -- double the number of characteristics and solve again
+
+-- interpolate the solution
+
+-- solve e field at each emitter and collector
+
+-- find currents at emitter and collector (two methods)
+
+-- resolve for potential fields considering the space charge
+
+-- compute convergence test
+
+-- compute the thrust and powers (this part could potentially be placed outside the convergence loop)
+
+store everything into results structure
+
+return results
+
+end
